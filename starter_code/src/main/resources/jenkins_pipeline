@@ -1,0 +1,53 @@
+pipeline {
+  agent {
+    node {
+      label 'master'
+    }
+  }
+
+  stages {
+
+    stage('clean up repo') {
+      steps {
+        sh '''
+                pkill -f '*auth-course*' | true
+                rm -r ecommerce | true
+                ls
+                '''
+      }
+    }
+
+    stage('checkout ws and setup') {
+      steps {
+        sh '''
+                git clone git@github.com:ZhenzhiXu/ecommerce.git | true
+                ls
+                '''
+      }
+    }
+
+    stage('build ecommerce') {
+      steps {
+        dir('ecommerce/starter_code') {
+          sh '''
+                    git checkout JDND
+                    mvn clean install
+                    '''
+        }
+      }
+    }
+
+    stage('deploy ecommerce') {
+      steps {
+        dir('ecommerce/starter_code') {
+          sh """
+                    JENKINS_NODE_COOKIE=dontKillMe nohup java -Dserver.port=8888 -jar target/auth-course-0.0.1-SNAPSHOT.jar &
+                    """
+        }
+      }
+    }
+
+  }
+
+
+}
