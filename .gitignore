@@ -1,0 +1,14 @@
+#intelliJ
+.idea/
+starter_code/auth-course.iml
+.DS_Store
+
+# logs
+eCommerce.log
+
+# "temporary" build files
+starter_code/target
+
+# mvn
+mvnw
+mvnw.cmd
